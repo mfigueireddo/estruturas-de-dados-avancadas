@@ -1,0 +1,1 @@
+# Repositório para depositar os laboratórios da disciplina de Estrutura de Dados Avançados
