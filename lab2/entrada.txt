@@ -1,0 +1,17 @@
+E 1 G
+E 2 R
+E 3 G
+E 4 Y
+E 5 G
+E 6 R
+E 7 G
+E 8 R
+S 5 R
+S 4 Y
+E 9 G
+E 10 Y
+E 11 R
+E 12 Y
+S 2 R
+S 6 R
+S 3 G
