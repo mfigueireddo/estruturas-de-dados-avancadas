@@ -1,0 +1,9 @@
+Dados 1.000 números de CPF
+
+Inserir os dados em uma tabela usando hashing
+- Definir o tamanho da tabela
+- Definir a função hash
+- Definir como são tratadas as colisões
+
+Indicar o número de colisões obtidas
+Exibir trechsoda tabela vazios
