@@ -6,19 +6,30 @@ struct No{
     struct No* prox;
 };
 
+struct NoBusca{
+    int distancia;
+    struct No* pai;
+};
+
 typedef struct No No;
+typedef struct NoBusca NoBusca;
 
 // Protótipos
-void lista_adjacencias(void);
+No** lista_adjacencias(void);
 void insere(No** vetor, int chave, int indice);
 No* criaNo(int chave);
 void imprime(No* vetor[], int tam);
 void matriz_adjacencias(void);
+void busca_amplitude(No* grafo[], int ponto_partida);
+NoBusca* criaNoBusca(int distancia, NoBusca* pai);
+void addPilha(int* vetor, int tam, int chave);
+void imprimeBusca(NoBusca* tabela[], int tam);
 
 int main(void){
 
-    //lista_adjacencias();
-    matriz_adjacencias();
+    No** aux = lista_adjacencias();
+    //matriz_adjacencias();
+    busca_amplitude(aux, 0);
 
     return 0;
 }
@@ -34,13 +45,16 @@ Descrição
 - Cada estrutura deverá ter o valor do nó adjacente e um ponteiro para o próximo nó
 
 Assertivas de saída
-- A função deve criar um grafo com os valores passados e imprimi-lo
+- A função deve criar um grafo com os valores passados, imprimi-lo e devolve-lo
 
+Assertivas de saída
+- A função deve retornar um ponteiro para o vetor com o grafo montado
 */
-void lista_adjacencias(void){
+No** lista_adjacencias(void){
 
     // Inicializa o vetor
-    No* grafo[10];
+    No** grafo = (No**)malloc(sizeof(No*)*10);
+    exit(1);
     for(int i=0; i<10; i++){
         grafo[i] = NULL;
     }
@@ -97,6 +111,8 @@ void lista_adjacencias(void){
 
     // Imprime o grafo
     imprime(grafo, 10);
+
+    return grafo;
 
 }
 
@@ -280,6 +296,156 @@ void matriz_adjacencias(void){
             printf("%d ", grafo[i][j]);
         }
         printf("\n");
+    }
+
+}
+
+/*
+Objetivo
+- Realizar uma busca em amplitude
+
+Descrição
+- Criar um vetor de ponteiros para estrutura NoBusca
+- Cada índice do vetor corresponde ao número do nó
+- Criar um vetor para armazenar os valores já vistados
+- Criar um vetor para armazenar quais nós devem ser visitados
+- Visitar os vizinhos do ponto de partida
+- Armazenar a quantidadade de saltos
+- Armazenar o "pai" desses vizinhos
+- Adicionar esses vizinhos à pilha
+- Adicionar esses vizinhos à lista de já visitados
+- Repetir esse processo
+
+Parâmetros
+- Vetor com a lista de adjacências
+- Ponto de partida
+*/
+void busca_amplitude(No* grafo[], int ponto_partida){
+
+    // Int que indica qual o número do nó sendo checado
+    int atual = ponto_partida;
+
+    // Tabela para armazenar a distância das chaves e seus pais
+    NoBusca* tabela[10];
+    for(int i=0; i<10; i++){
+        tabela[i] = (NoBusca*)malloc(sizeof(NoBusca));
+        if (tabela[i] == NULL) exit(1);
+    }
+
+    // Vetor que armazena quais índices já foram visitados (1)
+    int visitados[10];
+    for(int i=0; i<10; i++){
+        visitados[i] = 0;
+    }
+
+    // Vetor para armazenar quais os próximos nós a serem visitados (pilha)
+    int pilha[10];
+    for(int i=0; i<10; i++){
+        pilha[i] = -1;
+    }
+
+    // Preenche os dados para o ponto de partida
+    tabela[atual]->distancia = 0;
+    tabela[atual]->pai = NULL;
+    visitados[atual] = 1;
+    pilha[0] = ponto_partida;
+
+    // Percorre a pilha
+    for(int i=0; i<0; i++){
+
+        atual = pilha[i];
+
+        // Percorre os nós vizinhos do atual número da pilha
+        for(No* aux = grafo[atual]; aux != NULL; aux = aux->prox){
+
+            // Se este nó não tiver sido visitado
+            if (!visitados[aux->chave]){
+
+                // Adiciona na tabela
+                tabela[aux->chave] = criaNoBusca(tabela[atual]->distancia+1, tabela[atual]);
+
+                // Marca como visitado
+                visitados[aux->chave] = 1;
+
+                // Adiciona na pilha
+                addPilha(pilha, 10, aux->chave);
+
+            }
+
+        }
+    }
+
+    // Imprime a tabela
+    imprimeBusca(tabela, 10);
+
+}
+
+/*
+Descrição
+- Criar dinamicamente um nó de busca
+- Atribuir ao nó a distância passada como parâmetro
+- Atribuir ao nó o pai passado como parâmetro
+
+Parâmetros
+- Distância
+- Ponteiro para o pai
+
+Retorno
+- Um ponteiro para o nó criado
+
+Assertivas de entrada
+- Distância deve ser int
+- Ponteiro para o pai deve ser struct NoBusca*
+
+Assertivas de saída
+- A função deve retornar um ponteiro para o nó criado dinamicamente
+*/
+NoBusca* criaNoBusca(int distancia, NoBusca* pai){
+    NoBusca* novo_no = (NoBusca*)malloc(sizeof(NoBusca));
+    if (novo_no == NULL) exit(1);
+    novo_no->distancia = distancia;
+    novo_no->pai = pai;
+    return novo_no;
+}
+
+/*
+Descrição
+- Percorrer o vetor até encontrar uma posição nula
+- Armazenar a chave passada
+
+Parâmetros
+- Vetor
+- Tamanho do vetor
+- Chave
+
+Assertivas de entrada
+- Vetor deve ser int*
+- Valor deve ser int
+*/
+void addPilha(int* vetor, int tam, int chave){
+
+    int i;
+    for(i=0; i<tam && vetor[i]!=-1; i++);
+    vetor[i] = chave;
+}
+
+/*
+Descrição
+- Percorrer todos os NoBusca da tabela e exibir: índice, distância e endereço do pai
+
+Parâmetros
+- Vetor de ponteiros para NoBusca*
+- Tamanho do vetor
+*/
+void imprimeBusca(NoBusca* tabela[], int tam){
+
+    for(int i=0; i<tam; i++){
+        printf("%d\n", i);
+
+        if (tabela[i]!=NULL){
+            printf("Distância %d Pai %p\n", tabela[i]->distancia, tabela[i]->pai);
+        }
+
     }
 
 }
