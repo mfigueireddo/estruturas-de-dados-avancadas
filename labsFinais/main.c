@@ -13,10 +13,12 @@ void lista_adjacencias(void);
 void insere(No** vetor, int chave, int indice);
 No* criaNo(int chave);
 void imprime(No* vetor[], int tam);
+void matriz_adjacencias(void);
 
 int main(void){
 
-    lista_adjacencias();
+    //lista_adjacencias();
+    matriz_adjacencias();
 
     return 0;
 }
@@ -198,5 +200,86 @@ void imprime(No* vetor[], int tam){
         printf("\n");
 
     }   
+
+}
+
+/*
+Objetivo
+- Criar uma matriz de adjacências
+
+Descrição
+- Criar um vetor estático com as dimensões indicadas
+- Preenchê-lo com 0
+- Acessar o índice desejado e preencher com 1 
+- O índice deve ser acessado por [i][j] sendo i o nó trabalhado e j o nó adjacente
+
+*/
+void matriz_adjacencias(void){
+
+    int grafo[10][10];
+
+    for(int i=0; i<10; i++){
+        for(int j=0; j<10; j++){
+            grafo[i][j] = 0;
+        }
+    }
+
+    // Nó 0
+    grafo[0][1] = 1;
+    grafo[0][8] = 1;
+
+    // Nó 1
+    grafo[1][0] = 1;
+    grafo[1][3] = 1;
+    grafo[1][8] = 1;
+
+    // Nó 2
+    
+    // Nó 3
+    grafo[3][1] = 1;
+    grafo[3][4] = 1;
+    grafo[3][6] = 1;
+    grafo[3][9] = 1;
+
+    // Nó 4
+    grafo[4][3] = 1;
+    grafo[4][5] = 1;
+    grafo[4][6] = 1;
+
+    // Nó 5
+    grafo[5][4] = 1;
+    grafo[5][6] = 1;
+
+    // Nó 6
+    grafo[6][3] = 1;
+    grafo[6][4] = 1;
+    grafo[6][5] = 1;
+    grafo[6][7] = 1;
+
+    // Nó 7
+    grafo[7][6] = 1;
+    grafo[7][8] = 1;
+    grafo[7][9] = 1;
+    
+    // Nó 8
+    grafo[8][0] = 1;
+    grafo[8][1] = 1;
+    grafo[8][7] = 1;
+    grafo[8][9] = 1;
+
+    // Nó 9
+    grafo[9][3] = 1;
+    grafo[9][7] = 1;
+    grafo[9][8] = 1;
+
+    printf("\n<== MATRIZ DE ADJACÊNCIAS ==>\n");
+
+    // Imprime o grafo
+    for(int i=0; i<10; i++){
+        for(int j=0; j<10; j++){
+            printf("%d ", grafo[i][j]);
+        }
+        printf("\n");
+    }
 
 }
