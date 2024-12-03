@@ -12,24 +12,35 @@ struct NoBusca{
     struct NoBusca* pai;
 };
 
+struct Aresta{
+    int no1;
+    int no2;
+    int peso;
+};
+
 typedef struct No No;
 typedef struct NoBusca NoBusca;
+typedef struct Aresta Aresta;
 
 // Protótipos
 No** lista_adjacencias(void);
-void insere(No* vetor[], int chave, int indice, int peso);
+void insere(No** vetor, int chave, int indice, int peso);
 No* criaNo(int chave, int peso);
 void imprime(No* vetor[], int tam);
 void matriz_adjacencias(void);
 void busca_amplitude(No* grafo[], int ponto_partida);
 NoBusca* criaNoBusca(int distancia, NoBusca* pai);
 void imprimeBusca(NoBusca* tabela[], int tam);
+void kruskal(No* grafo[], int tam);
+Aresta* criaAresta(int no1, int no2, int peso);
+int procura_conflito(Aresta*** arvores, int qtd_arvores, Aresta* aresta);
 
 int main(void){
 
     No** aux = lista_adjacencias();
-    matriz_adjacencias();
-    busca_amplitude(aux, 0);
+    // matriz_adjacencias();
+    // busca_amplitude(aux, 0);
+    kruskal(aux, 10);
 
     return 0;
 }
@@ -436,5 +447,161 @@ void imprimeBusca(NoBusca* tabela[], int tam){
         printf("\n");
 
     }
+
+}
+
+/* 
+Objetivo
+- Criar o algoritmo de Kruskal para árvore geradora mínima
+
+Descrição
+- Procurar a aresta de menor peso
+- Se essa aresta não conectar nós que já fazem parte da mesma árvore, fazer a ligação
+- Fazer isso até que todos os nós estejam inclusos na árvore
+
+Parâmetros
+- Lista de adjacência do grafo
+- Tamanho do grafo
+
+Retorno
+
+Assertivas de entrada
+
+Assertivas de saída
+*/
+void kruskal(No* grafo[], int tam){
+
+    // Estrutura para armazenar as árvore montadas
+    Aresta*** arvores = (Aresta***)malloc(sizeof(Aresta**));
+    if (arvores == NULL) exit(1);
+
+    // Int para armazenar a quantidade de árvores existentes
+    int tam_atual_arvores = 0;
+
+    // Int para armazenar o tamanho da maior árvore montada
+    int tam_maior_arvore = 0;
+
+    // Estrutura para armazenar informações da aresta com menor peso
+    Aresta* menor;
+
+    // Enquanto a árvore não incluir todos os nós da árvore
+    while(tam_maior_arvore < 10){
+
+        // Percorre o grafo
+        for(int i=0; i<tam; i++){
+
+            // Se aquele nó tiver ligações
+            if (grafo[i] != NULL){
+
+                // Percorre as ligações do nó
+                for(No* aux = grafo[i]; aux!=NULL; aux = aux->prox){
+                    // Se o peso da aresta do nó trabalhado for menor que os demais E
+                    if (aux->peso < menor->peso){
+                        menor->no1 = i;
+                        menor->no2 = aux->chave;
+                        menor->peso = aux->peso;
+                    }
+                }
+
+            }
+
+        }
+
+        // Se essa aresta não conectar dois pontos de uma mesma árvore
+        if (!procura_conflito){
+
+            // Se já existir uma árvore com um desses nós
+                // Ligar os nós
+
+            // Se não existir uma árvore com esses nós
+                // Criar uma árvore e ligar os nós
+                arvores[tam_atual_arvores] = (Aresta*)malloc(sizeof(Aresta)*9)
+                if (arvores[tam_atual_arvores] == NULL) exit(1);
+
+        }
+
+
+    }
+
+}
+
+/*
+Descrição
+- Criar dinamicamente uma aresta com os valores passados
+
+Parâmetros
+- Nó 1
+- Nó 2
+- Peso da aresta
+
+Retorno
+- Ponteiro para a aresta
+
+Assertivas de entrada
+- Todos os parâmetros devem ser int
+
+Assertivas de saída
+- A aresta será criada dinamicamente na memória com os valores passados e um ponteiro à ela sera retornado
+*/
+Aresta* criaAresta(int no1, int no2, int peso){
+    Aresta* nova_aresta = (Aresta*)malloc(sizeof(Aresta));
+    if (nova_aresta == NULL) exit(1);
+    nova_aresta->no1 = no1;
+    nova_aresta->no2 = no2;
+    nova_aresta->peso = peso;
+    return nova_aresta;
+}
+
+/*
+Objetivo
+- Conferir se uma aresta conecta dois pontos de uma mesma árvore
+
+Descrição
+- Percorrer as árvores
+- Se ambos nós da aresta estiverem na árvore, retornar 1
+- Se não, continuar conferindo para as demais árvore
+- Se não estiver em nenhuma árvore, retornar 0
+
+Parâmetros
+- Árvores
+- Quantidade de árvores existentes
+- Aresta
+
+Retornos 
+- 0
+- 1
+*/
+int procura_conflito(Aresta*** arvores, int qtd_arvores, Aresta* aresta){
+
+    // Variável auxiliar para percorrer a árvore
+    Aresta* aux;
+
+    // Flags para armazenar se o nó foi encontrado na árvore
+    int flag1, flag2;
+
+    // Percorre todas as árvores
+    for(int i=0; i<qtd_arvores; i++){
+
+        // Zera o flag para cada árvore
+        flag1 = flag2 = 0;
+
+        // Percorre uma árvore
+        for(int j=0; j<9 && arvores[i][j]!= NULL; j++){
+
+            // Muda o ponteiro de posição no vetor da árvore
+            aux = arvores[i][j];
+
+            // Se um dos nós for encontrado, atualiza sua respectiva flag
+            if (aresta->no1 = aux->no1) flag1 = 1;
+            else if (aresta->no2 = aux->no2) flag2 = 1;
+
+        }
+
+        // Se ambos os nós forem encontrados, encerrar o programa
+        if (flag1 && flag2) return 1;
+
+    }
+
+    return 0;
 
 }
