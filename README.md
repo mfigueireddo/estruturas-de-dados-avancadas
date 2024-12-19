@@ -1,4 +1,4 @@
-# Repositório para depositar os laboratórios da disciplina de Estrutura de Dados Avançadas
+# Laboratório de Estrutura de Dados Avançadas
 
 Repositório para guardar os laboratórios da disciplina INF1010 - Estrutura de Dados Avançadas, cursada na PUC-Rio no período de 2024.2 pelo aluno Matheus Figueiredo.
 
